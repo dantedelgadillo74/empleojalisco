@@ -100,8 +100,11 @@ from tempfile import NamedTemporaryFile
 import xlsxwriter
 
 output = io.BytesIO()
-with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-    resultados.to_excel(writer, sheet_name='Predicciones', index=False)
+with pd.ExcelWriter(output, engine='xlsxwriter') as writer:  
+    resultados = pd.DataFrame({
+    'Año': años_futuro,
+    'Municipio': ', '.join(municipios_seleccionados)
+})
 st.download_button(
     label="⬇️ Descargar Excel con predicciones",
     data=output.getvalue(),

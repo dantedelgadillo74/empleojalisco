@@ -95,16 +95,31 @@ st.download_button(
     mime='text/csv'
 )
 
+# Añadir columna con nombre(s) del municipio a la tabla de resultados
+resultados['Municipio'] = ', '.join(municipios_seleccionados)
+
+# Mostrar tabla con municipios
+st.markdown("### 📋 Tabla de predicciones")
+st.dataframe(resultados.style.format(precision=0, thousands=","))
+
+# Botón para descargar CSV con predicciones
+csv = resultados.to_csv(index=False).encode('utf-8')
+st.download_button(
+    label="⬇️ Descargar CSV con predicciones",
+    data=csv,
+    file_name='proyecciones_asegurados.csv',
+    mime='text/csv'
+)
+
+# Botón para descargar Excel con predicciones
 import io
 from tempfile import NamedTemporaryFile
 import xlsxwriter
 
 output = io.BytesIO()
 with pd.ExcelWriter(output, engine='xlsxwriter') as writer:  
-    resultados = pd.DataFrame({
-    'Año': años_futuro,
-    'Municipio': ', '.join(municipios_seleccionados)
-})
+    resultados.to_excel(writer, index=False, sheet_name='Predicciones')
+
 st.download_button(
     label="⬇️ Descargar Excel con predicciones",
     data=output.getvalue(),

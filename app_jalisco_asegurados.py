@@ -102,7 +102,6 @@ import xlsxwriter
 output = io.BytesIO()
 with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
     resultados.to_excel(writer, sheet_name='Predicciones', index=False)
-    writer.save()
 st.download_button(
     label="⬇️ Descargar Excel con predicciones",
     data=output.getvalue(),

@@ -23,14 +23,14 @@ df = pd.read_csv("jalisco_asegurados.csv")
 df['fecha'] = pd.to_datetime(df['fecha'])
 df['año'] = df['fecha'].dt.year
 
-municipios_disponibles = df['municipio'].unique()
+municipios_disponibles = df['nombre_municipio'].unique()
 municipios_seleccionados = st.multiselect(
     "Selecciona uno o más municipios:",
     options=municipios_disponibles,
     default=[municipios_disponibles[0]]
 )
 
-df = df[df['municipio'].isin(municipios_seleccionados)]
+df = df[df['nombre_municipio'].isin(municipios_seleccionados)]
 df_anual = df.groupby('año')['asegurados'].sum().reset_index()
 df_anual['crecimiento_%'] = df_anual['asegurados'].pct_change() * 100
 df_anual['crecimiento_%'] = df_anual['crecimiento_%'].fillna(0).round(2)

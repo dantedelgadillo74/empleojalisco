@@ -24,13 +24,25 @@ df = pd.read_csv("jalisco_asegurados.csv")
 df['fecha'] = pd.to_datetime(df['fecha'])
 df['año'] = df['fecha'].dt.year
 
-# Selección de municipios
-municipios_disponibles = df['nombre_municipio'].unique()
-municipios_seleccionados = st.multiselect(
-    "Selecciona uno o más municipios:",
-    options=municipios_disponibles,
-    default=[municipios_disponibles[0]]
-)
+municipios_disponibles = sorted(df['nombre_municipio'].unique())
+
+col1, col2 = st.columns([4, 1])
+with col1:
+    municipios_seleccionados = st.multiselect(
+        "Selecciona uno o más municipios:",
+        options=municipios_disponibles,
+        default=[]
+    )
+with col2:
+    seleccionar_todos = st.checkbox("Seleccionar todos")
+
+if seleccionar_todos:
+    municipios_seleccionados = municipios_disponibles
+
+if not municipios_seleccionados:
+    st.warning("⚠️ Debes seleccionar al menos un municipio para continuar.")
+    st.stop()
+
 
 # Filtrado de datos y agregación anual
 df = df[df['nombre_municipio'].isin(municipios_seleccionados)]

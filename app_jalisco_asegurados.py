@@ -32,7 +32,7 @@ if 'asegurados' not in df.columns or 'trabajadores_asegurados' not in df.columns
     st.stop()
 
 # Selección de variable
-variable_mostrar = st.radio("Selecciona variable a mostrar:", ['asegurados', 'trabajadores_asegurados'], index=1)
+variable_mostrar = st.radio("Selecciona variable a mostrar:", ['Asegurados', 'Trabajadores asegurados'], index=1)
 
 # Selección de municipios
 municipios_disponibles = sorted(df['nombre_municipio'].dropna().unique())

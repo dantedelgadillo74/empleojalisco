@@ -32,6 +32,13 @@ if 'trabajadores_asegurados' not in df.columns:
 # Selector de variable a mostrar
 variable_mostrar = st.selectbox("Selecciona variable a mostrar:", ['asegurados', 'trabajadores_asegurados'])
 
+if 'nombre_municipio' not in df.columns or df.empty:
+    st.error("❌ El archivo no contiene la columna 'nombre_municipio' o está vacío.")
+    st.stop()
+
+municipios_disponibles = sorted(df['nombre_municipio'].dropna().unique())
+
+
 # Selector de municipios
 municipios_disponibles = sorted(df['nombre_municipio'].unique())
 col1, col2 = st.columns([4, 1])

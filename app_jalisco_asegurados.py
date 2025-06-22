@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression, Ridge
 from statsmodels.tsa.arima.model import ARIMA
-from prophet import Prophet
 import matplotlib.ticker as mticker
 import warnings
 warnings.filterwarnings("ignore")
@@ -16,7 +15,7 @@ st.title("📈 Proyección de Asegurados - Jalisco")
 
 modelos_seleccionados = st.multiselect(
     "Selecciona modelos de pronóstico a mostrar:",
-    ["Lineal", "Ridge", "ARIMA", "Prophet"],
+    ["Lineal", "Ridge", "ARIMA"],
     default=["Lineal", "Ridge", "ARIMA"]
 )
 
@@ -76,19 +75,6 @@ if "ARIMA" in modelos_seleccionados:
     resultados["ARIMA"] = pred.values
     for x, val in zip(años_futuro, pred):
         ax.text(x, val + max(y)*0.01, f"{int(val):,}", ha='center', va='bottom', fontsize=9, color='green')
-
-if "Prophet" in modelos_seleccionados:
-    df_p = df_anual.rename(columns={'año': 'ds', 'asegurados': 'y'})
-    df_p['ds'] = pd.to_datetime(df_p['ds'], format='%Y')
-    model = Prophet(yearly_seasonality=True)
-    model.fit(df_p)
-    future = model.make_future_dataframe(periods=6, freq='Y')
-    forecast = model.predict(future).tail(6)
-    pred = forecast['yhat'].values
-    ax.plot(años_futuro, pred, '--o', label='Prophet', color='purple')
-    resultados["Prophet"] = pred
-    for x, val in zip(años_futuro, pred):
-        ax.text(x, val + max(y)*0.01, f"{int(val):,}", ha='center', va='bottom', fontsize=9, color='purple')
 
 ax.set_title("Proyección de asegurados")
 ax.set_xlabel("Año")

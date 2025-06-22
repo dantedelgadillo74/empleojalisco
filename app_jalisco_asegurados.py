@@ -95,7 +95,26 @@ st.pyplot(fig)
 # Añadir columna de municipio y mostrar única tabla
 resultados['Municipio'] = ', '.join(municipios_seleccionados)
 st.markdown("### 📋 Tabla de predicciones")
-st.dataframe(resultados.style.format(precision=0, thousands=","))
+
+# Estilo condicional para formateo personalizado
+format_dict = {
+    "Año": "{:d}",
+    "Municipio": lambda x: x
+}
+
+# Formatear columnas numéricas con coma, excepto Año
+for col in resultados.columns:
+    if col not in format_dict:
+        format_dict[col] = "{:,.0f}"
+
+styled_df = resultados.style\
+    .format(format_dict)\
+    .set_table_styles([
+        {"selector": "th", "props": [("font-weight", "bold"), ("text-align", "center")]}
+    ])\
+    .set_properties(**{"text-align": "center"})
+
+st.dataframe(styled_df)
 
 # Botón para descargar CSV
 csv = resultados.to_csv(index=False).encode('utf-8')
